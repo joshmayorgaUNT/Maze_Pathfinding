@@ -7,31 +7,29 @@
 #include <sstream>
 using namespace std;
 
+// Cell: Represents a single cell in the maze with x and y coordinates and a space character.
 struct cell{
-	int x;		// x-coord of the cell (x = 0 is the left-most cell)
-	int y;		// y-coord of the cell (y = 0 is the upper most cell)
-	char space;	// cell can either be a wall '0' or empty ' '
+	int x;          // x-coord of the cell (x = 0 is the left-most cell)
+	int y;          // y-coord of the cell (y = 0 is the upper most cell)
+	char space;     // cell can either be a wall '0' or empty ' '
 };
 
-// maze class
-// rows, cols, and dynamic 2D array are initialized by readMazeFromFile() func
+ // Maze: Represents the maze with rows, columns, and a dynamic 2D array of cells
 class Maze{
 public:
-	int rows;
-	int cols;
-	cell** layout;	// Dynamic 2D array
-	
-	Maze() : rows(0), cols(0), layout(NULL) {};
-	~Maze();
-	
-	int a_star(double& runtime);	
-	int dijkstra(double& runtime); 
+	int rows;		// Number of rows in the maze
+	int cols;		// Number of columns in the maze
+	cell** layout;		// Pointer to a dynamically allocated 2D array of cells
 
+	Maze() : rows(0), cols(0), layout(NULL) {};	// Default constructor 
+	Maze(string file_name);				// Constructor that initializes the maze from a file
+	~Maze();					// Destructor to clean up dynamically allocated memory
+	
+	bool readMazeFromFile(string file_name);	// Reads maze configuration from a file
+	int a_star(double& runtime);			// Implements the A* algorithm for pathfinding
+	int dijkstra(double& runtime);			// Implements Dijkstra's algorithm for pathfinding
 
-	void print();
+	void print();					// Prints the maze layout
 };
-
-cell** readMazeFromFile(string maze_name, int& numRows, int& numCols);
-
 
 #endif
