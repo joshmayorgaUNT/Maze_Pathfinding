@@ -1,8 +1,9 @@
 #include "maze.h"
 
 int main(){
-	Maze maze1;
-	maze1.layout = readMazeFromFile("Mazes3.csv", maze1.rows, maze1.cols);
+	Maze maze1("Mazes1.csv");
+	Maze maze2("Mazes2.csv");
+	Maze maze3("Mazes3.csv");
 	maze1.print();
 
 	double runtime_dijkstra = 0;
