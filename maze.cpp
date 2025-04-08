@@ -1,12 +1,63 @@
 #include "maze.h"
 
+// Maze Constructor: Initializes rows, cols, and by reading the configuration from a .csv file
+// - Allocates and initializes a 2D array of cells based on the file content
+// Parameters:
+// - string maze_name: The name of the .csv file
+Maze::Maze(string maze_name){
+        ifstream maze_file(maze_name);
+
+        if(!maze_file.is_open()){ //Checks if file is valid
+                cout << "Error: could not open maze file" << endl;
+                rows = 0;
+                cols = 0;
+                layout = NULL;
+        }
+
+        string line;
+
+        // First line of .csv file is rows,cols
+        getline(maze_file, line, ',');
+        rows = stoi(line);
+        getline(maze_file, line);
+        cols = stoi(line);
+
+        // Allocate the 2D array
+        layout = new cell*[rows];
+        for(int i = 0; i < rows; i++){
+                layout[i] = new cell[cols];
+        }
+  
+        // Initialize the 2D array
+        int curr_row = 0;
+        int curr_col = 0;
+        while(getline(maze_file, line)){
+                stringstream ss(line);
+                string value;
+                curr_col = 0;
+                while(getline(ss, value, ',')){
+				        cell tempCell;
+                        tempCell.space = value[0];
+                        tempCell.x = curr_row;
+                        tempCell.y = curr_col;
+                        layout[curr_row][curr_col] = tempCell;
+                        curr_col++;
+                }
+                curr_row++;
+        }
+
+        maze_file.close();
+}
+
+// Maze Destructor: Deallocates the dynamically allocated memory for the maze layout
 Maze::~Maze(){
-	for(int i = 0; i < rows; i++){
+        for(int i = 0; i < rows; i++){
                         delete[] layout[i];
                 }
                 delete[] layout;
 }
 
+// Maze print: prints the maze
 void Maze::print(){
         for(int i = 0; i < rows; i++){
                 for(int j = 0; j < cols; j++){
@@ -16,46 +67,57 @@ void Maze::print(){
         }
 }
 
-cell** readMazeFromFile(string maze_name, int& numRows, int& numCols){
+// readMazeFromFile: Reads a maze configuration from a .csv file and initializes the maze layout
+// - If the maze was already allocated, it deallocates the previous array
+// Parameters:
+// - string maze_name: The name of the .csv file
+bool Maze::readMazeFromFile(string maze_name){
         ifstream maze_file(maze_name);
 
         if(!maze_file.is_open()){ //Checks if file is valid
-                cout << "Error: could not open input file" << endl;
-                return NULL;
-        }
+			return false;
+		}
 
         string line;
-        
+
         // First line of .csv file is rows,cols
         getline(maze_file, line, ',');
-        numRows = stoi(line);
+        rows = stoi(line);
         getline(maze_file, line);
-        numCols = stoi(line);
+        cols = stoi(line);
+
+        // If maze was already allocated, deallocate prev array
+        if(layout != NULL){
+                for(int i = 0; i < rows; i++){
+                        delete[] layout[i];
+                }
+                delete[] layout;
+        }
 
         // Allocate the 2D array
-        cell** maze = new cell*[numRows];
-        for(int i = 0; i < numRows; i++){
-                maze[i] = new cell[numCols];
+        layout = new cell*[rows];
+        for(int i = 0; i < rows; i++){
+                layout[i] = new cell[cols];
         }
-        
+  
         // Initialize the 2D array
-        int row = 0;
-        int col = 0;
-	while(getline(maze_file, line)){
+        int curr_row = 0;
+        int curr_col = 0;
+        while(getline(maze_file, line)){
                 stringstream ss(line);
                 string value;
-                col = 0;
+                curr_col = 0;
                 while(getline(ss, value, ',')){
                         cell tempCell;
                         tempCell.space = value[0];
-                        tempCell.x = row;
-                        tempCell.y = col;
-                        maze[row][col] = tempCell;
-                        col++;
+						tempCell.x = curr_row;
+                        tempCell.y = curr_col;
+                        layout[curr_row][curr_col] = tempCell;
+                        curr_col++;
                 }
-                row++;
+                curr_row++;
         }
 
         maze_file.close();
-        return maze;
+        return true;
 }
