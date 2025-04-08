@@ -12,6 +12,7 @@ Maze::Maze(string maze_name){
                 rows = 0;
                 cols = 0;
                 layout = NULL;
+		return;
         }
 
         string line;
@@ -76,7 +77,7 @@ bool Maze::readMazeFromFile(string maze_name){
 
         if(!maze_file.is_open()){ //Checks if file is valid
 			return false;
-		}
+	}
 
         string line;
 
