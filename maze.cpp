@@ -37,10 +37,24 @@ Maze::Maze(string maze_name){
                 string value;
                 curr_col = 0;
                 while(getline(ss, value, ',')){
-				        cell tempCell;
+			cell tempCell;
                         tempCell.space = value[0];
                         tempCell.x = curr_row;
                         tempCell.y = curr_col;
+			tempCell.isWall = value[0] == '0' ? true : false;
+			// Initialize adjacent cell pointers
+			if(curr_row != 0){		// if cell is not on the top row
+				tempCell.above = &layout[curr_row-1][curr_col];
+			}
+			if(curr_row != rows-1){		//if cell is not on the bottom row
+				tempCell.below = &layout[curr_row+1][curr_col];
+			}
+			if(curr_col != 0){		//if cell is not on the leftmost col
+				tempCell.left = &layout[curr_row][curr_col-1];
+			}
+			if(curr_col != cols-1){		//if cell is not on the rightmost col
+				tempCell.right = &layout[curr_row][curr_col+1];
+			}
                         layout[curr_row][curr_col] = tempCell;
                         curr_col++;
                 }
@@ -111,8 +125,22 @@ bool Maze::readMazeFromFile(string maze_name){
                 while(getline(ss, value, ',')){
                         cell tempCell;
                         tempCell.space = value[0];
-						tempCell.x = curr_row;
-                        tempCell.y = curr_col;
+			tempCell.x = curr_row;
+                        tempCell.y = curr_col;			
+			tempCell.isWall = value[0] == '0' ? true : false;
+			// Initialize adjacent cell pointers
+			if(curr_row != 0){		// if cell is not on the top row
+				tempCell.above = &layout[curr_row-1][curr_col];
+			}
+			if(curr_row != rows-1){		//if cell is not on the bottom row
+				tempCell.below = &layout[curr_row+1][curr_col];
+			}
+			if(curr_col != 0){		//if cell is not on the leftmost col
+				tempCell.left = &layout[curr_row][curr_col-1];
+			}
+			if(curr_col != cols-1){		//if cell is not on the rightmost col
+				tempCell.right = &layout[curr_row][curr_col+1];
+			}
                         layout[curr_row][curr_col] = tempCell;
                         curr_col++;
                 }
