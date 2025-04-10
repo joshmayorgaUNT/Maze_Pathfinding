@@ -12,6 +12,12 @@ struct cell{
 	int x;          // x-coord of the cell (x = 0 is the left-most cell)
 	int y;          // y-coord of the cell (y = 0 is the upper most cell)
 	char space;     // cell can either be a wall '0' or empty ' '
+	bool isWall;	// isWall bool to help with pathfinding
+
+	cell* above = NULL;	// Pointers to adjacent cells to assist with pathfinding
+	cell* below = NULL;
+	cell* left = NULL;
+	cell* right = NULL;
 };
 
  // Maze: Represents the maze with rows, columns, and a dynamic 2D array of cells
@@ -28,6 +34,7 @@ public:
 	bool readMazeFromFile(string file_name);	// Reads maze configuration from a file
 	int a_star(double& runtime);			// Implements the A* algorithm for pathfinding
 	int dijkstra(double& runtime);			// Implements Dijkstra's algorithm for pathfinding
+	int breadthfirstsearch(double &runtime);	// Implements breadth first search for pathfinding
 
 	void print();					// Prints the maze layout
 };
